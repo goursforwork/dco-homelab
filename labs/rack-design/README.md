@@ -2,7 +2,7 @@
 
 ## Objective
 
-Design a small data-center rack containing:
+Design a small simulated data-center rack containing:
 
 - 3 rack servers
 - 2 network switches
@@ -10,74 +10,59 @@ Design a small data-center rack containing:
 - Redundant A/B power feeds
 - Dual network paths
 - Clear rack-unit allocation
+- Front-to-rear airflow
+- Basic failure-domain validation
 
-This lab is a self-directed infrastructure design exercise intended to demonstrate understanding of rack layout, server placement, network redundancy, structured cabling, and redundant power design.
+This is a self-directed infrastructure design exercise intended to demonstrate understanding of rack layout, structured cabling, network redundancy, redundant power, airflow, and operational documentation.
+
+> **Portfolio note:** This is a self-directed simulated home-lab project created for hands-on learning and portfolio demonstration.
 
 ---
 
-# Rack Overview
-
-Example rack size:
-
-**42U standard rack**
+## Repository Contents
 
 ```text
-FRONT VIEW
-
-U42  ┌──────────────────────────────┐
-U41  │ Patch Panel A                │
-U40  │ Patch Panel B                │
-U39  ├──────────────────────────────┤
-U38  │ Switch A                     │
-U37  │ Switch B                     │
-U36  ├──────────────────────────────┤
-U35  │                              │
-U34  │ Server 1 - 2U                │
-U33  │ Server 1                     │
-U32  ├──────────────────────────────┤
-U31  │ Server 2 - 2U                │
-U30  │ Server 2                     │
-U29  ├──────────────────────────────┤
-U28  │ Server 3 - 2U                │
-U27  │ Server 3                     │
-U26  ├──────────────────────────────┤
-U25  │                              │
-U24  │ Reserved for expansion       │
-U23  │ Reserved for expansion       │
-U22  │                              │
-U21  │                              │
-U20  │                              │
-U19  │                              │
-U18  │                              │
-U17  │                              │
-U16  │                              │
-U15  │                              │
-U14  │                              │
-U13  │                              │
-U12  │                              │
-U11  │                              │
-U10  │                              │
-U09  │                              │
-U08  │                              │
-U07  │                              │
-U06  │                              │
-U05  │                              │
-U04  │                              │
-U03  │                              │
-U02  │                              │
-U01  │                              │
-      └──────────────────────────────┘
+rack-design/
+├── README.md
+├── rack-diagram.png
+├── assumptions.md
+├── cabling-map.md
+└── validation.md
 ```
 
 ---
 
-# Network Design
+## Rack Overview
 
-Each server connects to both switches for redundancy.
+Example rack size: **42U standard rack**
+
+![Rack Diagram](rack-diagram.png)
+
+### Rack Unit Allocation
+
+| Rack Unit | Equipment |
+|---|---|
+| U42 | Patch Panel A |
+| U41 | Patch Panel B |
+| U40 | Reserved / cable management |
+| U39 | Switch A |
+| U38 | Switch B |
+| U37-U35 | Reserved / cable management |
+| U34-U33 | Server 1 - 2U |
+| U32 | Reserved |
+| U31-U30 | Server 2 - 2U |
+| U29 | Reserved |
+| U28-U27 | Server 3 - 2U |
+| U26-U01 | Reserved for future expansion |
+
+---
+
+## Network Design
+
+Each server connects to both switches to provide two network paths.
 
 ```mermaid
 flowchart TB
-
     PPA["Patch Panel A"]
     PPB["Patch Panel B"]
 
@@ -101,7 +86,7 @@ flowchart TB
     S3 --> SWB
 ```
 
-Each server has two network interfaces:
+### Server Network Connections
 
 ```text
 Server 1
@@ -117,19 +102,18 @@ NIC 1 ───── Switch A
 NIC 2 ───── Switch B
 ```
 
-This avoids a single switch becoming a single point of failure.
+The design reduces the chance that a single switch failure will cause complete loss of server connectivity.
 
-If Switch A fails, servers should still have connectivity through Switch B.
+> Actual failover requires correct host and switch configuration, such as NIC bonding/teaming, LACP where appropriate, routing, or application-level redundancy. Physical dual cabling alone does not guarantee seamless failover.
 
 ---
 
-# Power Design
+## Power Design
 
-The rack uses separate A and B power paths.
+The rack uses independent A and B power paths.
 
 ```mermaid
 flowchart TB
-
     FEEDA["Power Feed A"]
     FEEDB["Power Feed B"]
 
@@ -164,38 +148,31 @@ flowchart TB
     PDUB --> S3P2
 ```
 
-Power connections:
+### Power Connections
 
 ```text
-                SERVER 1
-             ┌─────────────┐
-PDU A ──────►│ PSU 1       │
-PDU B ──────►│ PSU 2       │
-             └─────────────┘
+SERVER 1
+PDU A ───── PSU 1
+PDU B ───── PSU 2
 
-                SERVER 2
-             ┌─────────────┐
-PDU A ──────►│ PSU 1       │
-PDU B ──────►│ PSU 2       │
-             └─────────────┘
+SERVER 2
+PDU A ───── PSU 1
+PDU B ───── PSU 2
 
-                SERVER 3
-             ┌─────────────┐
-PDU A ──────►│ PSU 1       │
-PDU B ──────►│ PSU 2       │
-             └─────────────┘
+SERVER 3
+PDU A ───── PSU 1
+PDU B ───── PSU 2
 ```
 
-This is an example of **1+1 PSU redundancy** where one PSU is sufficient to keep the server operational.
+This models **1+1 PSU redundancy**, assuming one PSU is capable of supporting the server's required load.
 
 ---
 
-# Full Logical Rack Design
+## Full Logical Rack Design
 
 ```mermaid
 flowchart TB
-
-    ISP["Upstream Network"]
+    WAN["Upstream Network"]
 
     PPA["Patch Panel A"]
     PPB["Patch Panel B"]
@@ -213,8 +190,8 @@ flowchart TB
     FEEDA["Power Feed A / UPS A"]
     FEEDB["Power Feed B / UPS B"]
 
-    ISP --> PPA
-    ISP --> PPB
+    WAN --> PPA
+    WAN --> PPB
 
     PPA --> SWA
     PPB --> SWB
@@ -243,201 +220,78 @@ flowchart TB
 
 ---
 
-# Cabling Plan
+## Airflow Design
 
-| Device | Port | Connected To | Purpose |
-|---|---|---|---|
-| Server 1 | NIC 1 | Switch A | Primary network path |
-| Server 1 | NIC 2 | Switch B | Redundant network path |
-| Server 2 | NIC 1 | Switch A | Primary network path |
-| Server 2 | NIC 2 | Switch B | Redundant network path |
-| Server 3 | NIC 1 | Switch A | Primary network path |
-| Server 3 | NIC 2 | Switch B | Redundant network path |
-| Server 1 | PSU 1 | PDU A | Power Feed A |
-| Server 1 | PSU 2 | PDU B | Power Feed B |
-| Server 2 | PSU 1 | PDU A | Power Feed A |
-| Server 2 | PSU 2 | PDU B | Power Feed B |
-| Server 3 | PSU 1 | PDU A | Power Feed A |
-| Server 3 | PSU 2 | PDU B | Power Feed B |
-
----
-
-# Cable Labeling
-
-Example cable labels:
-
-```text
-Network
-
-SRV01-NIC1-SWA
-SRV01-NIC2-SWB
-
-SRV02-NIC1-SWA
-SRV02-NIC2-SWB
-
-SRV03-NIC1-SWA
-SRV03-NIC2-SWB
-```
-
-Power cables:
-
-```text
-SRV01-PSU1-PDUA
-SRV01-PSU2-PDUB
-
-SRV02-PSU1-PDUA
-SRV02-PSU2-PDUB
-
-SRV03-PSU1-PDUA
-SRV03-PSU2-PDUB
-```
-
----
-
-# Airflow Design
-
-Standard server airflow:
+The design assumes standard front-to-rear server airflow.
 
 ```text
 COLD AISLE
-
-      ↓ Cold air
-
-┌───────────────────────┐
-│ FRONT OF RACK         │
-│                       │
-│ Servers               │
-│ Switches              │
-│                       │
-└───────────────────────┘
-
-      ↓ Air passes
-        through equipment
-
-┌───────────────────────┐
-│ REAR OF RACK          │
-└───────────────────────┘
-
-      ↓ Hot exhaust
-
+    ↓
+Front of rack
+    ↓
+Servers / switches
+    ↓
+Rear of rack
+    ↓
 HOT AISLE
 ```
 
-Equipment should be installed so that airflow direction is consistent.
-
-Most servers use:
-
-**Front-to-rear airflow**
+Equipment should be installed with consistent airflow direction. Blank rack spaces should ideally use blanking panels in a real deployment to reduce recirculation.
 
 ---
 
-# Failure Scenarios
-
-## Scenario 1 — Switch A Failure
-
-```text
-Switch A ✖
-
-Server 1 ── NIC 2 ── Switch B ✓
-Server 2 ── NIC 2 ── Switch B ✓
-Server 3 ── NIC 2 ── Switch B ✓
-```
-
-Expected result:
-
-Servers retain network connectivity through Switch B.
-
----
-
-## Scenario 2 — PDU A Failure
-
-```text
-PDU A ✖
-
-Server 1 PSU 2 ── PDU B ✓
-Server 2 PSU 2 ── PDU B ✓
-Server 3 PSU 2 ── PDU B ✓
-```
-
-Expected result:
-
-Servers continue running on Power Feed B.
-
----
-
-## Scenario 3 — Server PSU Failure
-
-Example:
-
-```text
-Server 2
-
-PSU 1 ✖
-PSU 2 ✓
-```
-
-Expected result:
-
-Server 2 continues operating.
-
----
-
-# Design Decisions
+## Design Decisions
 
 ### Why place patch panels near the top?
 
-Patch panels are placed near the switches to reduce cable length and keep structured cabling organized.
+Patch panels are located near the network switches to keep structured cabling organized and minimize unnecessary cable runs.
 
 ### Why use two switches?
 
-Two switches provide network redundancy and reduce the risk of one switch becoming a single point of failure.
+Two switches provide separate network paths and reduce reliance on a single access switch.
 
 ### Why use two PDUs?
 
-PDU A and PDU B provide independent power paths.
+PDU A and PDU B create separate rack-level power paths.
 
 ### Why connect each PSU to a different PDU?
 
-Connecting both PSUs to the same PDU would leave the PDU as a single point of failure.
+Connecting both server PSUs to the same PDU would leave that PDU as a single point of failure.
 
 ### Why reserve rack space?
 
-Unused rack units provide room for future servers, storage appliances, additional switches, or other infrastructure.
+Reserved rack units allow for future compute, storage, network, cable-management, or monitoring equipment.
 
 ---
 
-# Skills Demonstrated
+## Skills Demonstrated
 
-This lab demonstrates understanding of:
-
-- Rack units
+- Rack units and rack planning
 - Rack server placement
 - Patch panels
 - Structured cabling
 - Network redundancy
 - Dual-switch architecture
-- NIC redundancy
+- NIC path diversity
 - Power redundancy
 - 1+1 PSU redundancy
 - A/B power feeds
-- PDUs
-- UPS concepts
-- Server airflow
-- Hot aisle / cold aisle
+- PDU and UPS concepts
+- Front-to-rear airflow
 - Cable labeling
 - Failure-domain thinking
-- Basic data-center infrastructure documentation
+- Infrastructure documentation
 
 ---
 
-# Validation Checklist
+## Validation Checklist
 
 - [x] 3 servers included
 - [x] 2 network switches included
 - [x] 2 patch panels included
-- [x] Each server connects to Switch A
-- [x] Each server connects to Switch B
-- [x] Each server has redundant PSU connections
+- [x] Each server has a path to Switch A
+- [x] Each server has a path to Switch B
+- [x] Each server has dual PSU connections
 - [x] PSU 1 connects to PDU A
 - [x] PSU 2 connects to PDU B
 - [x] Separate A/B power paths documented
@@ -445,12 +299,14 @@ This lab demonstrates understanding of:
 - [x] Failure scenarios documented
 - [x] Cable labeling scheme documented
 
+See [validation.md](validation.md) for the detailed test plan.
+
 ---
 
 ## Lab Conclusion
 
-This design provides basic network and power redundancy while maintaining a clear rack layout.
+This design demonstrates a small rack layout with basic network and power redundancy while preserving clear documentation and room for expansion.
 
-The exercise demonstrates how multiple failure domains can be considered when designing rack infrastructure. A single PSU, PDU, power feed, network interface, or switch failure should not automatically cause complete server loss, assuming the redundant components and network configuration are functioning correctly.
+The lab focuses on identifying and reducing single points of failure at the server, switch, PDU, and power-path levels. It also highlights an important operational principle: redundancy must exist both physically and logically to provide real resilience.
 
-This is a simulated home-lab design.
+This is a self-directed simulated home-lab project for portfolio and study purposes.
