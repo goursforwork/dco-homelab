@@ -453,4 +453,4 @@ This design provides basic network and power redundancy while maintaining a clea
 
 The exercise demonstrates how multiple failure domains can be considered when designing rack infrastructure. A single PSU, PDU, power feed, network interface, or switch failure should not automatically cause complete server loss, assuming the redundant components and network configuration are functioning correctly.
 
-This is a simulated home-lab design and does not represent production AWS infrastructure.
+This is a simulated home-lab design.
