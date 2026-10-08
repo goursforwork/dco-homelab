@@ -219,14 +219,3 @@ All project documentation is present and internally consistent.
 | Documentation | Not tested | |
 
 ---
-
-## Lessons Learned
-
-Record findings after completing the exercise:
-
-- What single points of failure were identified?
-- Did the physical and logical redundancy assumptions match?
-- Were any cable labels ambiguous?
-- Was rack space used efficiently?
-- Were power A/B paths clearly separated?
-- What would be added in a production-grade design?
