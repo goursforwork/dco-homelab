@@ -60,28 +60,5 @@ python scripts/validate_inventory.py data/sample_inventory.csv
 python -m unittest discover -s tests -v
 ```
 
-## Use it in your own homelab
-
-1. Copy `data/inventory_template.csv` into a **private** workspace; add **measured** asset data.
-2. Record rack occupancy using bottom-up U numbering, and enter the installed BIOS/firmware version.
-3. Validate exported CSV with the script, correct issues, and date the verification.
-4. Update the Excel sheet for filters, KPI totals, and review workflows; its demo data is a starting example, not automatically synchronized with CSV.
-5. Publish only sanitized data and screenshots with identifying details removed.
-
-See [`docs/DATA_DICTIONARY.md`](docs/DATA_DICTIONARY.md) for the field guide and data collection procedure.
-
-## What this demonstrates to employers
-
-**Data Center Operations / AWS DCO aligned skills:** asset identification and lifecycle tracking, rack-space awareness, documenting compute/storage/network hardware, management-plane awareness, installed firmware visibility, operational-status reporting, and repeatable quality checks. This project documents process skills; it does **not** claim work performed on AWS production systems.
-
-### Resume / portfolio entry
-
-> **Homelab Hardware Asset Inventory — Completed (Demo Project)**  
-> Designed a 21-field hardware register for seven simulated lab assets, capturing rack/U occupancy, serials, CPU, RAM, storage, NICs, management endpoints, firmware, and lifecycle status. Implemented automated inventory integrity checks, Python unit tests, and GitHub Actions validation.
-
-## Security and privacy
-
-The source CSV intentionally uses placeholder serials and non-routable documentation IPs. Do not commit real hardware serials, reachable management IPs, BMC login details, credentials, public-facing access URLs, or unredacted config exports to a public repo.
-
 ---
 **License:** This example is provided for portfolio and educational reuse; customize the attribution and license before public distribution.
