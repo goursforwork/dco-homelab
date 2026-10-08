@@ -1,0 +1,8 @@
+# Keep sensitive/raw machine inventory outside the public repository.
+reports/local/
+evidence/raw/
+private/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
