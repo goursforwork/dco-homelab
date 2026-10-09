@@ -1,7 +1,7 @@
 # One-Page Hardware Inspection Checklist
 
-**Date:** __________  **Device ID (non-sensitive alias):** __________  **Inspector:** __________  
-**Environment:** [ ] Physical PC  [ ] VM guest  **OS:** __________  **Hypervisor (if VM):** __________
+**Date:** 09 Oct 2026 **Device ID (non-sensitive alias):** __________  **Inspector:** __________  
+**Environment:** [Yes] Physical PC  [ ] VM guest  **OS:** Windows **Hypervisor (if VM):** __________
 
 ## 1. Firmware / physical or virtual hardware
 
@@ -34,5 +34,5 @@
 - [ ] Checked GitHub files for serial numbers, names, hostnames, IPs, MACs, keys.
 
 **Summary / findings:** _________________________________________________________  
-**Action / follow-up:** _________________________________________________________  
-**Result:** [ ] Completed  [ ] In progress  [ ] Blocked (explain in report)
+**Action / follow-up:** _______None__________________________________________________  
+**Result:** [Yes] Completed  [ ] In progress  [ ] Blocked (explain in report)
