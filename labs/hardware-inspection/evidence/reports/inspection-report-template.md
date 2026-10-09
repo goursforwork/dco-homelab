@@ -2,39 +2,35 @@
 
 > This is an **uncompleted template**, not evidence of a lab run. Copy to `reports/my-inspection.md` and enter observations from your own PC or VM. Use `N/A` for unavailable fields; never invent values.
 
-**Date:** TBD  
+**Date:** 09 Oct 2026 
 **Device alias:** LAB-PC-01 (example; do not use a real hostname)  
-**Environment:** Physical PC / VM guest (select one)  
-**Hypervisor, if applicable:** TBD / N/A  
-**OS and version:** TBD  
+**Environment:** Physical PC 
+**Hypervisor, if applicable:** N/A  
+**OS and version:** Windows
 **Inspection scope:** Read-only hardware and firmware inventory
 
 ## Hardware inventory and comparison
 
 | Item | BIOS/UEFI or VM settings | OS tool result | Match? / Notes |
 |---|---|---|---|
-| Manufacturer and model | TBD | TBD | TBD |
-| CPU model or vCPU allocation | TBD | TBD | TBD |
-| CPU cores / logical processors | TBD / not exposed | TBD | TBD |
-| RAM (include units) | TBD | TBD | TBD |
-| Disk model/capacity (include units) | TBD | TBD | TBD |
-| BIOS/UEFI vendor, version and date | TBD | TBD | TBD |
-| Boot mode / Secure Boot | TBD | TBD / N/A | TBD |
-| OS name/version | N/A | TBD | N/A |
+| Manufacturer and model - Lenovo
+| CPU model or vCPU allocation - Intel
+| CPU cores / logical processors | - 4 Cores
+| RAM (include units) - 8 gb
+| Disk model/capacity (include units) - 1 tb
+| BIOS/UEFI vendor, version and date - UEFI
+| Boot mode / Secure Boot - Secure Boot
+| OS name/version - Windows 11
 
 ## Checks performed
 
 | Check | Status | Evidence or observation |
 |---|---|---|
-| Firmware screen or VM settings reviewed | Not done | TBD |
-| OS inventory commands executed | Not done | TBD |
-| Device warnings/diagnostics reviewed | Not done | TBD |
-| Data sanitized for GitHub | Not done | TBD |
+| Firmware screen or VM settings reviewed - done 
+| OS inventory commands executed - done 
+| Device warnings/diagnostics reviewed - done 
+| Data sanitized for GitHub - done 
 
-## Findings and interpretation
-
-**Finding 1:** TBD. Include both the observation and what it means. If all checked fields match, say so and identify any not-checked items.  
-**Potential cause of any discrepancy:** TBD / None observed.  
 **Follow-up recommendation:** TBD.
 
 ## Evidence (redacted only)
